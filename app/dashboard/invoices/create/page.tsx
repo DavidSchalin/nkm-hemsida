@@ -6,6 +6,8 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Invoice Creation',
 };
+
+// literally nothing
  
 export default async function Page() {
   const customers = await fetchCustomers();
