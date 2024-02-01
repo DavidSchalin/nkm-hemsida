@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Invoice Creation',
 };
 
-// literally nothing
+// literally 
  
 export default async function Page() {
   const customers = await fetchCustomers();
