@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             },
             ]}
         />
-        <Form user={user}/>
+        <Form user={user[0]}/>
         </main>
     );
 }
