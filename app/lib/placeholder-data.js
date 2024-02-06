@@ -1,11 +1,54 @@
+
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
 const users = [
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
     name: 'User',
     email: 'user@nextmail.com',
     password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User2',
+    email: 'user2@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User3',
+    email: 'user3@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User4',
+    email: 'user4@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User5',
+    email: 'user5@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User6',
+    email: 'user6@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User7',
+    email: 'user7@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    name: 'User8',
+    email: 'user8@nextmail.com',
+    password: '123456',
+    image_url: '/customers/delba-de-oliveira.png',
   },
 ];
 

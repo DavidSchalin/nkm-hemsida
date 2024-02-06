@@ -7,6 +7,8 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  image_url: string;
+  balance: string;
 };
 
 export type Customer = {
@@ -74,6 +76,22 @@ export type FormattedCustomersTable = {
   total_pending: string;
   total_paid: string;
 };
+
+export type UsersTable = {
+  id: string;
+  name: string;
+  email: string;
+  image_url: string;
+  balance: number;
+}
+
+export type FormattedUsersTable = {
+  id: string;
+  name: string;
+  email: string;
+  image_url: string;
+  balance: number;
+}
 
 export type CustomerField = {
   id: string;

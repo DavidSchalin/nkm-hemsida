@@ -7,6 +7,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  UsersTable,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -234,5 +235,58 @@ export async function getUser(email: string) {
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
+  }
+}
+
+export async function fetchUsersPages(query: string) {
+  noStore();
+  try {
+    const count = await 
+    sql`
+      SELECT COUNT(*)
+        FROM users
+        WHERE 
+          users.email ILIKE ${`%${query}%`} OR
+          users.name ILIKE ${`%${query}%`} OR
+          users.balance::text ILIKE ${`%${query}%`} 
+    `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of users.');
+  }
+}
+
+export async function fetchFilteredUsers(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const users = await sql<UsersTable>`
+      SELECT
+        users.id,
+        users.name,
+        users.email,
+        users.image_url,
+        users.balance
+      FROM users
+      WHERE
+        users.name ILIKE ${`%${query}%`} OR
+        users.email ILIKE ${`%${query}%`} OR 
+        users.balance::text ILIKE ${`%${query}%`} 
+      ORDER BY users.name ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return users.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch users.');
   }
 }
