@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { fetchFilteredUsers } from '@/app/lib/data';
+import { UpdateUser, DeleteUser } from '@/app/ui/users/buttons';
 
 export default async function UsersTable({
   query,
@@ -39,10 +40,10 @@ export default async function UsersTable({
                       {(user.balance)}
                     </p>
                   </div>
-                  {/* <div className="flex justify-end gap-2">
-                    <UpdateInvoice id={invoice.id} />
-                    <DeleteInvoice id={invoice.id} />
-                  </div> */}
+                  <div className="flex justify-end gap-2">
+                    <UpdateUser id={user.id} />
+                    <DeleteUser id={user.id} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -62,9 +63,9 @@ export default async function UsersTable({
                 {/* <th scope="col" className="px-3 py-5 font-medium">
                   Status
                 </th> */}
-                {/* <th scope="col" className="relative py-3 pl-6 pr-3">
+                <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
-                </th> */}
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -87,9 +88,7 @@ export default async function UsersTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {user.email}
-                  </td>
-                  {/* TODO: Bra plats för saldo */}
-                  
+                  </td>                  
                   <td className="whitespace-nowrap px-3 py-3">
                     {(user.balance)}
                   </td>
@@ -98,13 +97,12 @@ export default async function UsersTable({
                     <InvoiceStatus status={user.status} />
                   </td>  */}
                  
-                  {/* TODO: Bra plats för edit user */}
-                  {/* <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={user.id} />
-                      <DeleteInvoice id={user.id} />
+                      <UpdateUser id={user.id} />
+                      <DeleteUser id={user.id} />
                     </div>
-                  </td> */}
+                  </td>
                 </tr>
               ))}
             </tbody>

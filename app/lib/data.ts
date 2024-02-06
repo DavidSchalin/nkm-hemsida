@@ -8,8 +8,9 @@ import {
   User,
   Revenue,
   UsersTable,
-} from './definitions';
-import { formatCurrency } from './utils';
+  UserForm,
+} from '@/app/lib/definitions';
+import { formatCurrency } from '@/app/lib/utils';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function fetchRevenue() {
@@ -173,6 +174,31 @@ export async function fetchInvoiceById(id: string) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoice.');
   }
+}
+
+export async function fetchUserById(id: string) {
+  noStore();
+  try {
+    const data = await sql<UserForm>`
+      SELECT
+        users.id,
+        users.name,
+        users.email,
+        users.balance
+      FROM users
+      WHERE users.id = ${id};
+    `;
+
+    const user = data.rows.map((user) => ({
+      ...user
+    }));
+    return user[0];
+
+  } catch (error) {
+    console.error('Database error:', error);
+    throw new Error('Failed to fetch user.');
+  }
+  
 }
 
 export async function fetchCustomers() {

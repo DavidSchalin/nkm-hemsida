@@ -6,6 +6,8 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { fetchUsersPages } from '@/app/lib/data';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
+import { CreateUser } from '@/app/ui/users/buttons';
+
  
 export const metadata: Metadata = {
   title: 'Users',
@@ -32,7 +34,7 @@ export default async function Page({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search users..." />
-        {/* <CreateUser /> */}
+        <CreateUser />
       </div>
        <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

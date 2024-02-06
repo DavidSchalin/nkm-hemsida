@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
-export type State = {
+export type InvoiceState = {
   errors?: {
     customerId?: string[];
     amount?: string[];
@@ -16,8 +16,18 @@ export type State = {
   message?: string | null;
 };
 
+export type UserState = {
+  errors?: {
+    id?: string[];
+    name?: string[];
+    email?: string[];
+    balance?: string[];
+  };
+  message?: string | null;
+}
+
  
-const FormSchema = z.object({
+const InvoiceFormSchema = z.object({
   id: z.string(),
   customerId: z.string({
     invalid_type_error: 'Please select a customer.',
@@ -30,10 +40,17 @@ const FormSchema = z.object({
     }),
   date: z.string(),
 });
- 
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function createInvoice(prevState: State, formData: FormData) {
+const UserFormSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  balance: z.number(),
+});
+ 
+const CreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
+
+export async function createInvoice(prevState: InvoiceState, formData: FormData) {
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -68,14 +85,48 @@ export async function createInvoice(prevState: State, formData: FormData) {
   redirect('/dashboard/invoices');
 }
 
+const CreateUser = UserFormSchema.omit({id: true});
+
+export async function createUser(prevState: UserState, formData: FormData) {
+  const validatedFields = CreateUser.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    balance: formData.get('balance'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Invoice',
+    };
+  }
+
+  // Prepare Data for insertion into the database
+  const {name, email, balance} = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO users (name, email, balance)
+      VALUES (${name}, ${email}, ${balance})
+    `;
+  } catch (error) {
+    return {
+      message: 'Database failed to create user',
+    };
+  }
+
+  revalidatePath('/dashboard/users');
+  redirect('/dashboard/invoices');
+}
+
   // Use Zod to update the expected types
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
- 
-// ...
+const UpdateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
+
+const UpdateUser = UserFormSchema.omit({id: true})
  
 export async function updateInvoice(
   id: string,
-  prevState: State,
+  prevState: InvoiceState,
   formData: FormData,
 ) {
   const validatedFields = UpdateInvoice.safeParse({
@@ -108,6 +159,41 @@ export async function updateInvoice(
   redirect('/dashboard/invoices');
 }
 
+export async function updateUser(
+  id: string,
+  prevState: UserState,
+  formData: FormData,  
+) {
+  const validatedFields = UpdateUser.safeParse({
+    userName: formData.get('name'),
+    userEmail: formData.get('email'),
+    userBalance: formData.get('balance'),
+  });
+
+  if (!validatedFields.success){
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to update user.',
+    };
+  }
+
+  const { name, email, balance } = validatedFields.data;
+  
+  try {
+    await sql`
+      UPDATE users
+      SET name = ${name}, email = ${email}, balance = ${balance}
+      WHERE id = ${id} 
+    `;
+
+  } catch (error) {
+    return {message: 'Database Error: Failed to Update User'};
+  }
+
+  revalidatePath('/dashboard/users');
+  redirect('/dashboard/users');
+}
+
 export async function deleteInvoice(id: string) {
     try {
         await sql`DELETE FROM invoices WHERE id = ${id}`;
@@ -118,7 +204,18 @@ export async function deleteInvoice(id: string) {
         };
     }
 
+}
+
+export async function deleteUser(id: string) {
+  try {
+    await sql`DELETE FROM users WHERE id = ${id}`;
+    revalidatePath('/dasboard/users');
+  } catch (error) {
+    return {
+      message: 'Database failed to delete user',
+    };
   }
+}
 
 export async function authenticate(
   prevState: string | undefined,
