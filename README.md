@@ -1,5 +1,7 @@
-## Next.js App Router Course - Starter
+## En ofärdig version av NKMs nya admin dashboard
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+Till för att göra livet enklare för THS Evenemangschef och NKMs Presidium att administrera Nymble Klubbmästeri (beta.nkm.nymble.se).
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+
+### Kod:
+Skriven i typescript med NextJS och hostad via Vercel
